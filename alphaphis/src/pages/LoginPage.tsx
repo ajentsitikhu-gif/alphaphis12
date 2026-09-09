@@ -14,10 +14,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
   const [localError, setLocalError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // If already authenticated, redirect to dashboard
+  // If already authenticated, redirect to the reward home page
   useEffect(() => {
     if (isAuthenticated) {
-      onNavigate('/dashboard');
+      onNavigate('/');
     }
   }, [isAuthenticated, onNavigate]);
 
@@ -30,7 +30,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
       const success = login(username, password);
       setIsSubmitting(false);
       if (success) {
-        onNavigate('/dashboard');
+        onNavigate('/');
       } else {
         setLocalError('Invalid username or password.');
       }
