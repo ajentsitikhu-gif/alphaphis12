@@ -34,11 +34,13 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   };
 
   const handleOpenRedeem = () => {
+    if (!wonPrize) return;
     setIsRedeemOpen(true);
   };
 
   const handleSubmissionComplete = (submission: UserSubmission) => {
     setLastSubmission(submission);
+    setWonPrize(null);
     setIsAlertOpen(true);
   };
 
@@ -74,19 +76,29 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         <RecentWinners />
 
         {/* Supporting education partners */}
-        <section className="mt-10 flex flex-col items-center gap-5" aria-label="Education partners">
-          <div className="flex w-full flex-col items-center justify-center gap-6 rounded-2xl border border-neutral-200 bg-white px-6 py-6 sm:flex-row sm:gap-10">
+        <section className="mt-10 flex flex-col items-center gap-4" aria-label="Education partners">
+          <div className="flex items-center gap-3 text-[11px] font-extrabold uppercase tracking-[0.18em] text-neutral-500">
+            <span className="h-px w-8 bg-blue-200" />
+            <span>In association with</span>
+            <span className="h-px w-8 bg-blue-200" />
+          </div>
+          <div className="flex w-full flex-col items-center justify-center gap-6 rounded-2xl border border-blue-100 bg-white px-6 py-7 shadow-sm sm:flex-row sm:gap-12">
             <img
               src="/assets/my-second-teacher.png"
               alt="My Second Teacher"
-              className="h-24 w-auto max-w-full object-contain sm:h-28"
+              className="h-24 w-auto max-w-full object-contain transition-transform duration-300 hover:scale-105 sm:h-28"
             />
             <img
               src="/assets/school-emblem.png"
               alt="Global Educational Academy emblem"
-              className="h-32 w-auto max-w-full object-contain sm:h-40"
+              className="h-32 w-auto max-w-full object-contain transition-transform duration-300 hover:scale-105 sm:h-40"
             />
           </div>
+          <p className="text-center text-sm font-semibold text-neutral-600">
+            <span className="text-blue-700">My Second Teacher</span>
+            <span className="mx-2 text-neutral-300">•</span>
+            <span className="text-emerald-700">ING Skill Academy</span>
+          </p>
         </section>
 
         {/* Clean educational footer */}
@@ -96,7 +108,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             <span>Spin and Win • Your chance to win exciting campus rewards</span>
           </div>
           <div className="text-neutral-400 text-[11px]">
-            <span>Security Officer console accessible via /login</span>
+            <span>GLOBAL The Path Finder</span>
           </div>
         </footer>
       </main>
@@ -105,7 +117,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       <RedeemModal
         isOpen={isRedeemOpen}
         prize={wonPrize}
-        onClose={() => setIsRedeemOpen(false)}
+        onClose={() => {
+          setIsRedeemOpen(false);
+          setWonPrize(null);
+        }}
         onSubmitted={handleSubmissionComplete}
       />
 

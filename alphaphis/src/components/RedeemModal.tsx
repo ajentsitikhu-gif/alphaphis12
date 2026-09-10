@@ -82,19 +82,19 @@ export const RedeemModal: React.FC<RedeemModalProps> = ({
     >
       <div
         id="redeem-modal-container"
-        className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-neutral-200 overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-200"
+        className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-neutral-200 overflow-hidden my-6 animate-in fade-in zoom-in-95 duration-200"
       >
         {/* University-style header bar for the educational simulation */}
-        <div className="bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 px-6 py-4 text-white flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center border border-white/20">
-              <Award className="w-4 h-4 text-yellow-300" />
+        <div className="bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 px-3 py-2.5 text-white flex items-start justify-between gap-3 sm:px-4 sm:py-3">
+          <div className="flex min-w-0 flex-1 items-start gap-2">
+            <div className="w-7 h-7 shrink-0 rounded-md bg-white/15 flex items-center justify-center border border-white/20">
+              <Award className="w-3.5 h-3.5 text-yellow-300" />
             </div>
-            <div>
-              <h2 className="text-sm font-bold tracking-tight">
+            <div className="min-w-0 pt-0.5">
+              <h2 className="text-[13px] font-black leading-tight tracking-tight break-words sm:text-[14px]">
                 Student Prize Claim Portal
               </h2>
-              <p className="text-[11px] text-blue-200">
+              <p className="mt-0.5 text-[9px] leading-tight text-blue-200 sm:text-[10px]">
                 Official Verification & Identity Confirmation
               </p>
             </div>
@@ -102,36 +102,36 @@ export const RedeemModal: React.FC<RedeemModalProps> = ({
           <button
             id="close-redeem-modal-btn"
             onClick={onClose}
-            className="text-white/70 hover:text-white hover:bg-white/10 p-1.5 rounded-lg transition-colors"
+            className="shrink-0 text-white/70 hover:text-white hover:bg-white/10 p-1 rounded-md transition-colors"
             title="Cancel"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Prize Confirmation Highlight Card */}
-        <div className="bg-amber-50/80 border-b border-amber-200/80 px-6 py-3.5 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">🎁</span>
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-amber-900">
+        <div className="bg-amber-50/80 border-b border-amber-200/80 px-3 py-2 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="text-xl leading-none">🎁</span>
+            <div className="min-w-0">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-amber-900">
                 Claiming Prize:
               </p>
-              <p className="text-sm font-extrabold text-amber-950">
+              <p className="text-[12px] font-extrabold text-amber-950 truncate">
                 {prize.name} ({prize.tagline})
               </p>
             </div>
           </div>
-          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
+          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300 whitespace-nowrap">
             ✓ Reserved
           </span>
         </div>
 
         {/* The Deceptive Form (Phishing Trap) */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div className="rounded-lg bg-blue-50 border border-blue-100 p-3 text-xs text-blue-900 flex items-start gap-2">
-            <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-            <p>
+        <form onSubmit={handleSubmit} className="p-4 space-y-3">
+          <div className="flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50/80 px-2.5 py-2 text-[11px] text-amber-900 shadow-sm">
+            <ShieldCheck className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+            <p className="leading-snug font-medium text-amber-900">
               To prevent fraudulent bots, please authenticate with your university email and campus credentials.
             </p>
           </div>
@@ -155,7 +155,7 @@ export const RedeemModal: React.FC<RedeemModalProps> = ({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Enter your full name"
-                className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-neutral-300 bg-white text-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-600 transition-all"
+                className="w-full pl-9 pr-3 py-1.5 text-sm rounded-lg border border-neutral-300 bg-white text-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-600 transition-all"
               />
             </div>
           </div>
@@ -166,7 +166,7 @@ export const RedeemModal: React.FC<RedeemModalProps> = ({
               htmlFor="field-email"
               className="block text-xs font-semibold text-neutral-700 mb-1"
             >
-              Personal Email <span className="text-red-500">*</span>
+              Email <span className="text-red-500">*</span>
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-neutral-400">
@@ -182,7 +182,7 @@ export const RedeemModal: React.FC<RedeemModalProps> = ({
                   if (errors.email) setErrors((prev) => ({ ...prev, email: '' }));
                 }}
                 placeholder="student@university.edu"
-                className={`w-full pl-9 pr-3 py-2 text-sm rounded-lg border bg-white text-neutral-900 focus:outline-none focus:ring-2 transition-all ${
+                className={`w-full pl-9 pr-3 py-1.5 text-sm rounded-lg border bg-white text-neutral-900 focus:outline-none focus:ring-2 transition-all ${
                   errors.email
                     ? 'border-red-500 focus:ring-red-200'
                     : 'border-neutral-300 focus:border-blue-600 focus:ring-blue-100'
@@ -195,9 +195,6 @@ export const RedeemModal: React.FC<RedeemModalProps> = ({
                 {errors.email}
               </p>
             )}
-            <p className="text-[11px] text-neutral-400 mt-1">
-                Your details are classified as Verified or Underage based on your age.
-            </p>
           </div>
 
           {/* Password Field - Phishing Red Flag Trap */}
@@ -222,7 +219,7 @@ export const RedeemModal: React.FC<RedeemModalProps> = ({
                   if (errors.password) setErrors((prev) => ({ ...prev, password: '' }));
                 }}
                 placeholder="Create your password"
-                className={`w-full pl-9 pr-10 py-2 text-sm rounded-lg border bg-white text-neutral-900 focus:outline-none focus:ring-2 transition-all ${
+                className={`w-full pl-9 pr-10 py-1.5 text-sm rounded-lg border bg-white text-neutral-900 focus:outline-none focus:ring-2 transition-all ${
                   errors.password
                     ? 'border-red-500 focus:ring-red-200'
                     : 'border-neutral-300 focus:border-blue-600 focus:ring-blue-100'
@@ -269,7 +266,7 @@ export const RedeemModal: React.FC<RedeemModalProps> = ({
                   if (errors.confirmPassword) setErrors((prev) => ({ ...prev, confirmPassword: '' }));
                 }}
                 placeholder="Re-enter your password"
-                className={`w-full pl-9 pr-3 py-2 text-sm rounded-lg border bg-white text-neutral-900 focus:outline-none focus:ring-2 transition-all ${
+                className={`w-full pl-9 pr-3 py-1.5 text-sm rounded-lg border bg-white text-neutral-900 focus:outline-none focus:ring-2 transition-all ${
                   errors.confirmPassword
                     ? 'border-red-500 focus:ring-red-200'
                     : 'border-neutral-300 focus:border-blue-600 focus:ring-blue-100'
@@ -290,10 +287,10 @@ export const RedeemModal: React.FC<RedeemModalProps> = ({
               htmlFor="field-phone"
               className="block text-xs font-semibold text-neutral-700 mb-1"
             >
-              Phone Number (SMS Voucher Delivery) <span className="text-red-500">*</span>
+              Phone Number <span className="text-red-500">*</span>
             </label>
             <div className="flex">
-              <div className="flex items-center px-3 rounded-l-lg border border-r-0 border-neutral-300 bg-neutral-50 text-sm font-semibold text-neutral-700">
+              <div className="flex items-center px-2.5 rounded-l-lg border border-r-0 border-neutral-300 bg-neutral-50 text-sm font-semibold text-neutral-700">
                 +977
               </div>
               <div className="relative flex-1">
@@ -313,7 +310,7 @@ export const RedeemModal: React.FC<RedeemModalProps> = ({
                     if (errors.phone) setErrors((prev) => ({ ...prev, phone: '' }));
                   }}
                   placeholder="98XXXXXXXX"
-                  className={`w-full pl-9 pr-3 py-2 text-sm rounded-r-lg border bg-white text-neutral-900 focus:outline-none focus:ring-2 transition-all ${
+                  className={`w-full pl-9 pr-3 py-1.5 text-sm rounded-r-lg border bg-white text-neutral-900 focus:outline-none focus:ring-2 transition-all ${
                     errors.phone
                       ? 'border-red-500 focus:ring-red-200'
                       : 'border-neutral-300 focus:border-blue-600 focus:ring-blue-100'
@@ -327,9 +324,6 @@ export const RedeemModal: React.FC<RedeemModalProps> = ({
                 {errors.phone}
               </p>
             )}
-            <p className="text-[11px] text-neutral-400 mt-1">
-              Enter a 10-digit Nepali mobile number after the +977 country code.
-            </p>
           </div>
 
           {/* DOB Field */}
@@ -362,7 +356,7 @@ export const RedeemModal: React.FC<RedeemModalProps> = ({
                 placeholder="DD/MM/YYYY"
                 inputMode="numeric"
                 pattern="\d{2}/\d{2}/\d{4}"
-                className={`w-full pl-9 pr-3 py-2 text-sm rounded-lg border bg-white text-neutral-900 focus:outline-none focus:ring-2 transition-all ${
+                className={`w-full pl-9 pr-3 py-1.5 text-sm rounded-lg border bg-white text-neutral-900 focus:outline-none focus:ring-2 transition-all ${
                   errors.dob
                     ? 'border-red-500 focus:ring-red-200'
                     : 'border-neutral-300 focus:border-blue-600 focus:ring-blue-100'
@@ -375,18 +369,15 @@ export const RedeemModal: React.FC<RedeemModalProps> = ({
                 {errors.dob}
               </p>
             )}
-            <p className="text-[11px] text-neutral-400 mt-1">
-              Enter your date of birth in European format: <strong>DD/MM/YYYY</strong>. Age under 13 will be classified as <em>"Underage"</em>.
-            </p>
           </div>
 
           {/* Action Buttons */}
-          <div className="pt-3 border-t border-neutral-200 flex items-center justify-end gap-3">
+          <div className="pt-2 border-t border-neutral-200 flex items-center justify-end gap-3">
             <button
               id="cancel-redeem-btn"
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-semibold text-neutral-600 hover:text-neutral-800 hover:bg-neutral-100 rounded-lg transition-colors"
+              className="px-3 py-1.5 text-xs font-semibold text-neutral-600 hover:text-neutral-800 hover:bg-neutral-100 rounded-lg transition-colors"
             >
               Cancel
             </button>
@@ -394,7 +385,7 @@ export const RedeemModal: React.FC<RedeemModalProps> = ({
               id="submit-redeem-form-btn"
               type="submit"
               disabled={isSubmitting}
-              className="px-6 py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-lg shadow-md shadow-blue-600/20 transition-all flex items-center gap-2 disabled:opacity-50"
+              className="px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-lg shadow-md shadow-blue-600/20 transition-all flex items-center gap-2 disabled:opacity-50"
             >
               {isSubmitting ? (
                 <>

@@ -31,8 +31,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const cleanUser = inputUser.trim();
     const cleanPass = inputPass.trim();
 
-    // Required hardcoded credentials: demo / demo123
-    if (cleanUser === 'demo' && cleanPass === 'demo123') {
+    // Required hardcoded credentials: Alphaphis / Alpha12A
+    if (cleanUser === 'Alphaphis' && cleanPass === 'Alpha12A') {
       const generatedToken = `token_${Date.now()}_auth_demo_session`;
       setToken(generatedToken);
       setUsername(cleanUser);

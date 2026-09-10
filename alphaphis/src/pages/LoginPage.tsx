@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, Lock, User, ArrowLeft, AlertCircle } from 'lucide-react';
+import { ShieldCheck, Lock, User, ArrowLeft, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { AppRoute } from '../types';
 
@@ -11,6 +11,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
   const { login, isAuthenticated, error } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -102,13 +103,25 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
               </div>
               <input
                 id="login-password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter password"
-                className="w-full pl-9 pr-3 py-2.5 text-sm rounded-xl border border-neutral-300 bg-white text-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-600 transition-all font-mono"
+                className="w-full pl-9 pr-10 py-2.5 text-sm rounded-xl border border-neutral-300 bg-white text-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-600 transition-all font-mono"
               />
+              <button
+                type="button"
+                onPointerDown={() => setShowPassword(true)}
+                onPointerUp={() => setShowPassword(false)}
+                onPointerLeave={() => setShowPassword(false)}
+                onPointerCancel={() => setShowPassword(false)}
+                aria-label="Hold to show password"
+                title="Hold to show password"
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-neutral-400 hover:text-neutral-700 transition-colors"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
           </div>
 
