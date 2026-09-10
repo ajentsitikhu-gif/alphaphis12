@@ -9,6 +9,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [token, setToken] = useState<string | null>(null);
   const [username, setUsername] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isAuthReady, setIsAuthReady] = useState(false);
 
   // Rehydrate auth state on mount
   useEffect(() => {
@@ -23,6 +24,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     } catch {
       localStorage.removeItem(AUTH_STORAGE_KEY);
+    } finally {
+      setIsAuthReady(true);
     }
   }, []);
 
@@ -59,6 +62,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       value={{
         token,
         isAuthenticated: !!token,
+        isAuthReady,
         username,
         login,
         logout,

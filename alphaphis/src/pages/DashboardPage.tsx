@@ -34,7 +34,7 @@ const formatNepaliDate = (dateString: string) => {
 };
 
 export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
-  const { isAuthenticated, username, logout } = useAuth();
+  const { isAuthenticated, isAuthReady, username, logout } = useAuth();
   const [submissions, setSubmissions] = useState<UserSubmission[]>([]);
   const [filterStatus, setFilterStatus] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -55,6 +55,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
   // Authentication protection: redirect if not logged in
   useEffect(() => {
     const loadData = async () => {
+      if (!isAuthReady) return;
+
       if (!isAuthenticated) {
         onNavigate('/login');
         return;
@@ -65,7 +67,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
     };
 
     void loadData();
-  }, [isAuthenticated, onNavigate]);
+  }, [isAuthenticated, isAuthReady, onNavigate]);
 
   const handleLogout = () => {
     logout();

@@ -37,6 +37,7 @@ export interface Winner {
 export interface AuthContextType {
   token: string | null;
   isAuthenticated: boolean;
+  isAuthReady: boolean;
   username: string | null;
   login: (username: string, password: string) => boolean;
   logout: () => void;
