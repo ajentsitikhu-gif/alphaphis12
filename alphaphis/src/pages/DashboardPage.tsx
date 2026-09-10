@@ -54,11 +54,17 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
 
   // Authentication protection: redirect if not logged in
   useEffect(() => {
-    if (!isAuthenticated) {
-      onNavigate('/login');
-    } else {
-      setSubmissions(getSubmissions());
-    }
+    const loadData = async () => {
+      if (!isAuthenticated) {
+        onNavigate('/login');
+        return;
+      }
+
+      const data = await getSubmissions();
+      setSubmissions(data);
+    };
+
+    void loadData();
   }, [isAuthenticated, onNavigate]);
 
   const handleLogout = () => {
@@ -66,20 +72,20 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
     onNavigate('/login');
   };
 
-  const handleClearAll = () => {
+  const handleClearAll = async () => {
     if (window.confirm('Are you sure you want to clear all logged submissions?')) {
-      clearAllSubmissions();
-      setSubmissions([]);
+      const updated = await clearAllSubmissions();
+      setSubmissions(updated);
     }
   };
 
-  const handleResetDemoData = () => {
-    const fresh = resetToDemoData();
+  const handleResetDemoData = async () => {
+    const fresh = await resetToDemoData();
     setSubmissions(fresh);
   };
 
-  const handleDeleteItem = (id: string) => {
-    const updated = deleteSubmission(id);
+  const handleDeleteItem = async (id: string) => {
+    const updated = await deleteSubmission(id);
     setSubmissions(updated);
     if (selectedSubmission?.id === id) {
       setSelectedSubmission(null);

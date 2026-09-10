@@ -2,6 +2,7 @@ import { SubmissionStatus, UserSubmission } from '../types';
 import { calculateAge } from './validation';
 
 const STORAGE_KEY = 'phishing_demo_submissions';
+const API_BASE = '/api';
 
 const LEGACY_PRIZE_NAMES: Record<string, string> = {
   'iPhone 16 Pro': 'RS 500 for free',
@@ -65,35 +66,69 @@ const INITIAL_DEMO_DATA: UserSubmission[] = [
   },
 ];
 
-export function getSubmissions(): UserSubmission[] {
+function normalizeSubmission(submission: Partial<UserSubmission>): UserSubmission {
+  const dob = submission.dob ?? '';
+  const calculatedAge = calculateAge(dob);
+  const status: SubmissionStatus = calculatedAge < 13 ? 'Underage' : 'Verified';
+
+  return {
+    id: submission.id ?? `sub_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
+    name: submission.name ?? '',
+    email: submission.email ?? '',
+    phone: submission.phone ?? '',
+    dob,
+    prize:
+      submission.email === 'aakrist.baral@student.edu' && submission.prize === 'Free Pizza Party'
+        ? 'Free coffee'
+        : LEGACY_PRIZE_NAMES[submission.prize ?? ''] || submission.prize || '',
+    status,
+    timestamp: submission.timestamp ?? new Date().toISOString(),
+    calculatedAge,
+    flagReason:
+      status === 'Underage'
+        ? `Student is underage (${calculatedAge} years old). Minor status flag.`
+        : 'Legitimate-looking target data captured.',
+    riskScore: 'Critical',
+  };
+}
+
+async function fetchFromApi<T>(endpoint: string, init?: RequestInit): Promise<T | null> {
+  try {
+    const response = await fetch(`${API_BASE}${endpoint}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...(init?.headers ?? {}),
+      },
+      ...init,
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    return (await response.json()) as T;
+  } catch {
+    return null;
+  }
+}
+
+export async function getSubmissions(): Promise<UserSubmission[]> {
   if (typeof window === 'undefined') return [];
+
+  const remote = await fetchFromApi<UserSubmission[]>('/submissions');
+  if (remote) {
+    const normalized = remote.map(normalizeSubmission);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
+    return normalized;
+  }
+
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
-      // Seed with initial educational sample data
       localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_DEMO_DATA));
       return INITIAL_DEMO_DATA;
     }
-    const submissions = (JSON.parse(raw) as UserSubmission[]).map((submission) => {
-      const calculatedAge = calculateAge(submission.dob);
-      const status: SubmissionStatus = calculatedAge < 13 ? 'Underage' : 'Verified';
-
-      return {
-        ...submission,
-        prize:
-          submission.email === 'aakrist.baral@student.edu' && submission.prize === 'Free Pizza Party'
-            ? 'Free coffee'
-            : LEGACY_PRIZE_NAMES[submission.prize] || submission.prize,
-        calculatedAge,
-        status,
-        flagReason:
-          status === 'Underage'
-            ? `Student is underage (${calculatedAge} years old). Minor status flag.`
-            : 'Legitimate-looking target data captured.',
-        riskScore: 'Critical' as const,
-      };
-    });
-
+    const submissions = (JSON.parse(raw) as UserSubmission[]).map(normalizeSubmission);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(submissions));
     return submissions;
   } catch (error) {
@@ -103,7 +138,7 @@ export function getSubmissions(): UserSubmission[] {
 }
 
 export function saveSubmission(submission: Omit<UserSubmission, 'id' | 'timestamp'>): UserSubmission {
-  const id = `sub_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  const id = `sub_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
   const timestamp = new Date().toISOString();
   const newSubmission: UserSubmission = {
     ...submission,
@@ -111,24 +146,58 @@ export function saveSubmission(submission: Omit<UserSubmission, 'id' | 'timestam
     timestamp,
   };
 
-  const current = getSubmissions();
-  current.push(newSubmission);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
+  if (typeof window !== 'undefined') {
+    fetchFromApi<UserSubmission>('/submissions', {
+      method: 'POST',
+      body: JSON.stringify(newSubmission),
+    });
+
+    const current = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]') as UserSubmission[];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...current, newSubmission]));
+  }
+
   return newSubmission;
 }
 
-export function deleteSubmission(id: string): UserSubmission[] {
-  const current = getSubmissions();
+export async function deleteSubmission(id: string): Promise<UserSubmission[]> {
+  const remote = await fetchFromApi<UserSubmission[]>('/submissions/' + id, {
+    method: 'DELETE',
+  });
+
+  if (remote) {
+    return remote;
+  }
+
+  const current = await getSubmissions();
   const filtered = current.filter((s) => s.id !== id);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
   return filtered;
 }
 
-export function clearAllSubmissions(): void {
+export async function clearAllSubmissions(): Promise<UserSubmission[]> {
+  const remote = await fetchFromApi<UserSubmission[]>('/submissions', {
+    method: 'DELETE',
+  });
+
+  if (remote) {
+    localStorage.removeItem(STORAGE_KEY);
+    return remote;
+  }
+
   localStorage.removeItem(STORAGE_KEY);
+  return [];
 }
 
-export function resetToDemoData(): UserSubmission[] {
+export async function resetToDemoData(): Promise<UserSubmission[]> {
+  const remote = await fetchFromApi<UserSubmission[]>('/submissions/reset', {
+    method: 'POST',
+  });
+
+  if (remote) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(remote));
+    return remote;
+  }
+
   localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_DEMO_DATA));
   return INITIAL_DEMO_DATA;
 }
