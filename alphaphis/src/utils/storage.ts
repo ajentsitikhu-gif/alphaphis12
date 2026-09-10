@@ -2,7 +2,7 @@ import { SubmissionStatus, UserSubmission } from '../types';
 import { calculateAge } from './validation';
 
 const STORAGE_KEY = 'phishing_demo_submissions';
-const API_BASE = '/api';
+const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
 const LEGACY_PRIZE_NAMES: Record<string, string> = {
   'iPhone 16 Pro': 'RS 500 for free',
