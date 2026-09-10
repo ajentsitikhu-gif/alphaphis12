@@ -56,7 +56,7 @@ const INITIAL_DEMO_DATA: UserSubmission[] = [
     email: 'aakrist.baral@student.edu',
     phone: '+977 9804567890',
     dob: '2010-09-15',
-    prize: 'Free Pizza Party',
+    prize: 'Free coffee',
     status: 'Underage',
     timestamp: new Date(Date.now() - 1000 * 60 * 210).toISOString(),
     calculatedAge: 15,
@@ -80,7 +80,10 @@ export function getSubmissions(): UserSubmission[] {
 
       return {
         ...submission,
-        prize: LEGACY_PRIZE_NAMES[submission.prize] || submission.prize,
+        prize:
+          submission.email === 'aakrist.baral@student.edu' && submission.prize === 'Free Pizza Party'
+            ? 'Free coffee'
+            : LEGACY_PRIZE_NAMES[submission.prize] || submission.prize,
         calculatedAge,
         status,
         flagReason:
