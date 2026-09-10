@@ -1,0 +1,6 @@
+{
+  "installCommand": "npm install --prefix alphaphis",
+  "buildCommand": "npm run build --prefix alphaphis",
+  "outputDirectory": "alphaphis/dist",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}
